@@ -57,6 +57,14 @@ echo abcdefghij | sed 's|.|&:|4g'
 # produces
 abcd:e:f:g:h:i:j:
 
+# a useful use case
+echo 'colA|colB|colC|colD' | sed -e 's/|/\n/g' | cat -n
+# produces
+     1  colA
+     2  colB
+     3  colC
+     4  colD
+
 # the /p flag for printing
 # with -n, p only prints the matching lines
 # -n suppresses printing of lines
@@ -489,4 +497,51 @@ sed '1,$ {
 # line with the matching expression
 sed -n '$=' file
 # will print the no of lines in the file
+# to use a range of patterns, cury braces must be used
+
+
+# the y command
+# the y command can be used to transform the matching pattern with a corresponding
+# specified replacement
+# example could be changing to uppercase
+echo $'1\n2\n3\n4\n5' | sed 'y/0123/1234/'
+# produces
+2
+3
+4
+4
+5
+
+
+# the l command
+# the l command can be used to debug sed scripts
+# it can print the current pattern space
+# see how the following command behaves -e 'l' at start and end 
+# behave differently
+echo $'1\n2\n3\n4\n5' | sed -e 'l' -e 'y/0123/1234/' -e 'l'
+1$
+2$
+2
+2$
+3$
+3
+3$
+4$
+4
+4$
+4$
+4
+5$
+5$
+5
+
+# notice how the second expression fails due to change in the pattern space
+# curly braces are required in such cases
+echo $'1\n2\n3\n4\n5' | sed -e 'y/0123/1234/' -e 's/1/-/'
+2
+3
+4
+4
+5
+
 
