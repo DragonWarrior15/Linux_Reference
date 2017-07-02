@@ -104,3 +104,76 @@ b
 # modified
 
 
+# the NF variable
+# the NF variable stores the no of fields present after splitting
+# $NF can be used to print the last field and is perfectly valid
+echo $'a|b\nc|d|e\nf|g' | awk -F"|" '{print NF}'
+# produces
+2
+3
+2
+
+echo $'a|b\nc|d|e\nf|g' | awk -F"|" '{print $NF}'
+# produces
+b
+e
+g
+
+
+# the NR variable
+# this variable holds the number of records till the current line
+# and can be said as a line number
+echo 'a|b|c|d|e|f|g|h' | sed 's/|/\n/g' | awk '{print NR, $0}'
+# produces
+a
+b
+c
+d
+e
+f
+g
+h
+
+
+# the RS variable
+# this variable can be used to store or change the record separator
+# by default, the record separator is the \n
+# change it to "" in the BEGIN statement and we can read the entire file
+# into the memory simultaneously
+echo 'a|b|c|d|e|f|g|h' | awk 'BEGIN{RS="|"}{print NR, $0}'
+# produces
+1 a
+2 b
+3 c
+4 d
+5 e
+6 f
+7 g
+8 h
+
+
+# the ORS variable
+# this variable can be modified to change how the output record fields are separated
+# suppose we are exporting th file for a non unix system
+# by default the record separator is \n, using ORS we can change it to
+# \n\r, ie add a carriage return
+echo 'a|b|c|d|e|f|g|h' | awk 'BEGIN{RS="|";ORS=":"}{print $0}'
+# produces
+a:b:c:d:e:f:g:h
+
+
+# the FILENAME variable
+# this variable holds the name of the current file being read
+# useful when we have multiple files are being read
+
+
+# associative array in awk
+# the look similar to the list data structure in python
+# instead of an index, we can use anyvariable we want
+# see the below example to get a better understanding
+ls -l | awk '{username[$3]++;}END{for(i in username){print username[i], i}}' | sort -nr
+# this can be done in even fewer lines though
+ls -l | awk '{print $3}' | sort | uniq -c | sort -nr
+
+
+
